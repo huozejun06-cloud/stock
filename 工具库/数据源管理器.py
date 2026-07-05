@@ -156,7 +156,11 @@ class DataSourceManager:
             if not line.strip() or '=' not in line:
                 continue
             parts = line.split('~')
+            if len(parts) < 2: continue
             if len(parts) < 40:
+                print(f'[DIAG-L1] parts[:10]={parts[:10]}')
+                print(f'[DIAG-L1] parts len={len(parts)}')
+                
                 continue
             # 腾讯原始格式：v_sh601600="1~... 或 sh601600~...
             # 用正则提取其中6位数字代码
@@ -188,12 +192,9 @@ class DataSourceManager:
                         except Exception as e:
                             print(f"  ⚠️ 数据源管理器.py: {e}")
                             换手率 = 0
-                    results.append({
-                        '代码': code,
-                        '名称': name,
-                        '涨跌幅': pct,
-                        '换手率': 换手率 or 0,
-                    })
+                    res = {'代码': code, '名称': name, '涨跌幅': pct, '换手率': 换手率 or 0}
+                    if len(results) < 1: print(f'[DIAG-L2] result dict keys={list(res.keys())}')
+                    results.append(res)
             except Exception as e:
                 print(f"  ⚠️ 数据源管理器.py: {e}")
                 continue
@@ -294,7 +295,11 @@ class DataSourceManager:
             if not line.strip() or '=' not in line:
                 continue
             parts = line.split('~')
+            if len(parts) < 2: continue
             if len(parts) < 40:
+                print(f'[DIAG-L1] parts[:10]={parts[:10]}')
+                print(f'[DIAG-L1] parts len={len(parts)}')
+                
                 continue
             try:
                 code = parts[0][2:] if parts[0].startswith(
@@ -495,6 +500,9 @@ class DataSourceManager:
 
         df = pd.DataFrame(all_results)
         print(f"    ✅ 腾讯并发扫描完毕，共 {len(df)} 只股票")
+        if len(df) > 0:
+            print(f"[DIAG-L3] df.columns={df.columns.tolist()}")
+            print(f"[DIAG-L4] df.head(1).to_dict={df.head(1).to_dict('records')}")
         return df
 
     # ==========================================================================
