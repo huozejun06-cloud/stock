@@ -182,10 +182,14 @@ class DataSourceManager:
                         print(f"  ⚠️ 数据源管理器.py: {e}")
                         换手率 = 0
                     # 兜底逻辑：用成交额估算换手率
+                    # 始终提取最新价 (parts[3] = 腾讯API最新价)
+                    try:
+                        最新价 = float(parts[3]) if len(parts) > 3 and parts[3] else 0
+                    except:
+                        最新价 = 0
                     if not 换手率 or 换手率 == 0:
                         try:
                             成交额 = float(parts[37]) if len(parts) > 37 and parts[37] else 0
-                            最新价 = float(parts[3]) if len(parts) > 3 and parts[3] else 0
                             流通市值 = float(parts[44]) if len(parts) > 44 and parts[44] else 0
                             if 成交额 > 0 and 流通市值 > 0:
                                 换手率 = round(成交额 / 流通市值 * 100, 2)
