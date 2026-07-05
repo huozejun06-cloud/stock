@@ -1,6 +1,6 @@
 <template>
   <div ref="pageRef" class="min-h-screen pt-28 pb-8 px-4" style="background: var(--color-bg)">
-    <div class="mx-auto flex gap-4" style="max-width: var(--space-container); height: calc(100vh - 120px)">
+    <div class="mx-auto flex gap-4" style="max-width: var(--space-container)">
 
       <!-- Left: Filter Panel -->
       <aside ref="filterRef" class="glass-card p-5 shrink-0 overflow-y-auto" style="width: 260px; opacity: 0">
@@ -47,13 +47,13 @@
       </aside>
 
       <!-- Center: Stock List -->
-      <main ref="listRef" class="flex-1 flex flex-col overflow-hidden" style="opacity: 0">
+      <main ref="listRef" class="flex-1 flex flex-col" style="opacity: 0">
         <div class="text-sm mb-3 flex justify-between items-center px-1" style="font-family: var(--font-body)">
           <span style="color: var(--text-secondary)">候选股 <span style="color: var(--color-highlight); font-family: var(--font-number)">{{ filteredStocks.length }}</span> 只</span>
           <span class="text-xs" style="color: var(--text-dim)">数据源: 东方财富</span>
         </div>
 
-        <div class="flex-1 overflow-y-auto space-y-1 pr-1" style="min-height: 0">
+        <div class="flex-1 overflow-y-auto space-y-1 pr-1">
           <div
             v-for="s in filteredStocks"
             :key="s.code"
