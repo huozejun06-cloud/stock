@@ -36,7 +36,7 @@
             <span style="color: var(--text-secondary)">主力净流入 &gt; 0</span>
           </label>
 
-          <button @click="runScan" :disabled="scanning" class="w-full cta-orange transition-all duration-300" :class="{ "opacity-50 cursor-not-allowed": scanning }" text-sm py-2.5 rounded-lg font-semibold transition-all duration-300 hover:shadow-glow-orange" style="font-family: var(--font-body)">
+          <button @click="runScan" :disabled="scanning" class="w-full cta-orange transition-all duration-300" :class="{ 'opacity-50 cursor-not-allowed': scanning }" text-sm py-2.5 rounded-lg font-semibold transition-all duration-300 hover:shadow-glow-orange" style="font-family: var(--font-body)">
             开始扫描
           </button>
         </div>
