@@ -3,7 +3,7 @@
 # Phase B-8: 一次性返回候选股列表（前端初始加载用）
 # ==============================================================================
 
-import asyncio, json, random
+import asyncio, json, random, os
 from datetime import datetime
 from fastapi import APIRouter
 
@@ -30,6 +30,47 @@ def _mock_stocks(n=50):
         })
     return stocks
 
+
+import os, random
+
+def _cache_stocks(limit=50):
+    """从 K线CSV缓存读取最新收盘价（周末/非交易时段兜底）"""
+    from config import CACHE_DIR
+    files = [f for f in os.listdir(CACHE_DIR) if f.endswith('_日K.csv')]
+    random.shuffle(files)  # 随机顺序，避免每次都是同一批
+    
+    stocks = []
+    for fname in files:
+        code = fname.replace('_日K.csv', '')
+        # 只读主板
+        if code.startswith(('300','301','688','689','8')):
+            continue
+        try:
+            with open(os.path.join(CACHE_DIR, fname)) as f:
+                lines = f.readlines()
+                if len(lines) < 2:
+                    continue
+                last = lines[-1].strip().split(',')
+                close = float(last[4])
+                pct = float(last[9]) if len(last) > 9 else 0
+                score = round(50 + pct * 5)
+                if score > 100: score = 100
+                if score < 0: score = 0
+                stocks.append({
+                    "code": code, "name": code,
+                    "price": close, "pct_chg": pct,
+                    "score": score,
+                    "signal": "BUY" if pct > 2 else "WATCH" if pct > 0 else "SELL",
+                })
+        except:
+            continue
+        if len(stocks) >= limit * 3:  # 多取一些供排序
+            break
+    
+    stocks.sort(key=lambda s: s["pct_chg"], reverse=True)
+    return stocks[:limit]
+
+
 async def _scanner_data():
     from server.routes.ws import _scan_market_top50
     print("[Scanner] 调用 DataSourceManager.get_all_market_stocks()...")
@@ -40,10 +81,10 @@ async def _scanner_data():
         print(f"[Scanner] ❌ DataSourceManager 异常: {e}")
         stocks = []
     if not stocks:
-        print("[Scanner] ⚠️ 无数据，降级到 mock")
-        stocks = _mock_stocks(50)
+        print("[Scanner] ⚠️ 无数据，降级到 CSV 缓存")
+        stocks = _cache_stocks(50)
     print(f"[Scanner] 最终返回 {len(stocks)} 只")
-    return {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), , "data_source": "live" if len(stocks) > 0 and stocks[0].get("price", 0) > 0 else "mock"}
+    return {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "total": len(stocks), "stocks": stocks, "data_source": "live" if len(stocks) > 0 and stocks[0].get("price", 0) > 0 else "mock"}
 
 @router.get("/api/scanner")
 async def get_scanner():
