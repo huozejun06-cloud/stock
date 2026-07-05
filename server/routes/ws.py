@@ -41,15 +41,15 @@ async def _scan_market_top50():
     # _fetch() returns list[dict] with fields: code, price, change_pct, volume, name
     valid = []
     for s in stocks:
-        code = str(s.get('code', '')).zfill(6)
+        code = str(s.get('code', s.get('代码', ''))).zfill(6)
         if not code or len(code) != 6:
             continue
         valid.append({
             'code': code,
-            'price': round(float(s.get('price', 0)), 2),
-            'change_pct': round(float(s.get('change_pct', 0)), 2),
-            'volume': int(float(s.get('volume', 0))),
-            'name': str(s.get('name', code)),
+            'price': round(float(s.get('price', s.get('最新价', 0))), 2),
+            'change_pct': round(float(s.get('change_pct', s.get('涨跌幅', 0))), 2),
+            'volume': int(float(s.get('volume', s.get('成交量', 0)))),
+            'name': str(s.get('name', s.get('名称', code))),
         })
 
     valid.sort(key=lambda x: abs(x['change_pct']), reverse=True)
