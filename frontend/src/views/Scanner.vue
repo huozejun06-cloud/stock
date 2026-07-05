@@ -42,7 +42,7 @@
         </div>
 
         <div class="mt-4 pt-4 text-xs" style="border-top: 1px solid rgba(255,255,255,.06); color: var(--text-dim); font-family: var(--font-body)">
-          上次扫描: {{ lastScan }}
+          上次扫描: {{ lastScan }}<br/><span :style="{ color: apiError ? 'var(--color-red)' : 'var(--color-green)', fontSize: '12px', fontFamily: 'var(--font-body)' }">{{ apiError ? '⚠️ 本地模拟数据' : '✅ 实时行情数据' }}</span>
         </div>
       </aside>
 
