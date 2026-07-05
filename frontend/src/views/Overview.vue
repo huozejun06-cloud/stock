@@ -92,39 +92,76 @@ const pageRef = ref(null); const headerRef = ref(null)
 const cardRefs = ref([]); const globalRef = ref(null); const newsRef = ref(null)
 const sentimentRef = ref(null); const sectorsRef = ref(null); const logRef = ref(null)
 
-const indices = [
+const indices = ref([
   { name: '上证指数', price: '3,342.17', change: +0.72, amount: '4,821亿' },
   { name: '深证成指', price: '10,891.55', change: +0.89, amount: '6,254亿' },
   { name: '创业板指', price: '2,194.33', change: -0.14, amount: '1,893亿' },
   { name: '科创50', price: '1,025.60', change: +1.23, amount: '847亿' },
-]
+])
 
-const globalIndices = [
+const globalIndices = ref([
   { name: '道琼斯', flag: '🇺🇸', price: '42,130.55', change: +0.35 },
   { name: '纳斯达克', flag: '🇺🇸', price: '19,854.21', change: +0.52 },
   { name: '恒生指数', flag: '🇭🇰', price: '22,340.18', change: -0.28 },
   { name: '日经225', flag: '🇯🇵', price: '38,762.44', change: +0.18 },
-]
+])
 
-const sentiment = { upDown: '2,847 : 2,156', limitUp: 62, limitDown: 8, maxBoard: 7, volume: '11,428亿' }
+const sentiment = ref({ upDown: '2,847 : 2,156', limitUp: 62, limitDown: 8, maxBoard: 7, volume: '11,428亿' })
 
-const sectors = [
+const sectors = ref([
   { name: '半导体', count: 48, change: +3.52 },
   { name: '人工智能', count: 62, change: +2.87 },
   { name: '新能源车', count: 35, change: +2.14 },
   { name: '生物医药', count: 56, change: +1.68 },
   { name: '军工航天', count: 28, change: -0.43 },
-]
+])
 
-const newsItems = ['北向资金今日净流入58.3亿，外资连续第5日加仓A股','央行开展2000亿MLF操作，利率维持不变','半导体板块集体走强，板块内12只个股涨停','新能源车6月销量同比+38%，渗透率突破45%','美联储维持利率不变，点阵图显示年内或降息2次']
+const newsItems = ref(['北向资金今日净流入58.3亿，外资连续第5日加仓A股','央行开展2000亿MLF操作，利率维持不变','半导体板块集体走强，板块内12只个股涨停','新能源车6月销量同比+38%，渗透率突破45%','美联储维持利率不变，点阵图显示年内或降息2次'])
 
-const agentLogs = [
+const agentLogs = ref([
   { agent: 'Trend', msg: '市场整体处于多头排列，MA20向上发散，中期趋势看多。', time: '14:32:05', color: 'var(--color-highlight)' },
   { agent: 'Macro', msg: '北向资金今日净流入58.3亿，外资连续第5日加仓A股。', time: '14:31:42', color: 'var(--color-purple)' },
   { agent: 'Sector', msg: '半导体板块RS强度突破85，板块内涨停12家，强势特征明显。', time: '14:30:18', color: 'var(--color-green)' },
   { agent: 'Risk', msg: '当前市场波动率处于低位（ATR占比1.2%），系统性风险可控。', time: '14:29:55', color: 'var(--color-primary)' },
   { agent: 'News', msg: '今日无重大利空公告，市场情绪偏乐观。', time: '14:28:30', color: 'var(--color-highlight)' },
-]
+])
+
+// Fetch real data from backend
+async function fetchOverview() {
+  try {
+    const res = await fetch('http://localhost:8000/api/overview')
+    if (!res.ok) return
+    const d = await res.json()
+
+    // Map API fields to template variables
+    if (d.indices?.length) indices.value = d.indices.map(i => ({
+      name: i.name, price: i.price?.toLocaleString?.() || String(i.price),
+      change: i.change_pct || i.change || 0,
+      amount: i.amount || ''
+    }))
+    if (d.global?.length) globalIndices.value = d.global.map(g => ({
+      flag: g.name === '道琼斯' || g.name === '纳斯达克' ? '🇺🇸' : g.name === '恒生指数' ? '🇭🇰' : '🇯🇵',
+      name: g.name, price: g.price?.toLocaleString?.() || String(g.price),
+      change: g.change_pct || g.change || 0
+    }))
+    if (d.sentiment) sentiment.value = {
+      upDown: d.sentiment.up_down_ratio || sentiment.value.upDown,
+      limitUp: d.sentiment.limit_up || sentiment.value.limitUp,
+      limitDown: d.sentiment.limit_down || sentiment.value.limitDown,
+      maxBoard: d.sentiment.max_board_height || sentiment.value.maxBoard,
+      volume: d.sentiment.volume || sentiment.value.volume
+    }
+    if (d.sectors?.length) sectors.value = d.sectors.map(s => ({
+      name: s.name, count: s.count, change: s.change_pct || s.change || 0
+    }))
+    if (d.news?.length) newsItems.value = d.news
+    if (d.ai_logs?.length) agentLogs.value = d.ai_logs.map(a => ({
+      agent: a.agent, msg: a.msg, time: a.time,
+      color: 'var(--color-highlight)'
+    }))
+  } catch (e) { /* keep mock data */ }
+}
+
 
 function animateIn(el, delay = 0) {
   if (!el) return
