@@ -26,7 +26,7 @@ async def _scan_market_top50():
         if hasattr(stocks, 'to_dict'):
             stocks = stocks.to_dict('records')
         # Filter BEFORE sorting — 排除 创业板/科创板/北交所
-        stocks = [s for s in stocks if isinstance(s, dict) and not str(s.get('code','')).startswith(('300','301','688','689','8'))]
+        stocks = [s for s in stocks if isinstance(s, dict) and not str(s.get('code', s.get('代码',''))).startswith(('300','301','688','689','8'))]
         return stocks
 
     try:
@@ -44,9 +44,10 @@ async def _scan_market_top50():
         code = str(s.get('code', s.get('代码', ''))).zfill(6)
         if not code or len(code) != 6:
             continue
+        if len(valid) == 0 and s: print(f'[DEBUG] First stock keys: {list(s.keys())[:10]}')
         valid.append({
             'code': code,
-            'price': round(float(s.get('price', s.get('最新价', 0))), 2),
+            'price': round(float(s.get('price', s.get('最新价', s.get('现价', 0)))), 2),
             'change_pct': round(float(s.get('change_pct', s.get('涨跌幅', 0))), 2),
             'volume': int(float(s.get('volume', s.get('成交量', 0)))),
             'name': str(s.get('name', s.get('名称', code))),
