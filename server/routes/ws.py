@@ -27,7 +27,7 @@ async def _scan_market_top50():
         return stocks
 
     try:
-        df = await loop.run_in_executor(None, _fetch)
+        stocks = await loop.run_in_executor(None, _fetch)
     except Exception as e:
         print(f'  ⚠️ 全市场扫描失败: {e}')
         return []
