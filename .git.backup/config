@@ -1,0 +1,13 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[http]
+	postBuffer = 524288000
+	proxy = http://127.0.0.1:7890
+[remote "origin"]
+	url = git@github.com:huozejun06-cloud/stockquant.git
+	fetch = +refs/heads/*:refs/remotes/origin/*

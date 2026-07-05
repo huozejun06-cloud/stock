@@ -35,10 +35,6 @@ async def _scanner_data():
     stocks = await _scan_market_top50()
     if not stocks:
         stocks = _mock_stocks(50)
-    # Filter out 创业板/科创板/北交所 (user can't trade these)
-    stocks = [s for s in stocks if not str(s.get('code','')).startswith(('300','301','688','689','8'))]
-    if not stocks:
-        stocks = _mock_stocks(50)
     return {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "total": len(stocks), "stocks": stocks}
 
 @router.get("/api/scanner")

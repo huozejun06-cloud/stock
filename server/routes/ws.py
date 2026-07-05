@@ -21,7 +21,10 @@ async def _scan_market_top50():
     def _fetch():
         from 工具库.数据源管理器 import get_manager
         mgr = get_manager()
-        return mgr.get_all_market_stocks()
+        stocks = mgr.get_all_market_stocks()
+        # Filter BEFORE sorting — 排除 创业板/科创板/北交所
+        stocks = [s for s in stocks if not str(s.get('code','')).startswith(('300','301','688','689','8'))]
+        return stocks
 
     try:
         df = await loop.run_in_executor(None, _fetch)

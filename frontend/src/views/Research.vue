@@ -292,7 +292,7 @@ function renderKline() {
   const ohlc = []
   let p = basePrice.value * 0.9
   for (let i = 0; i < 30; i++) {
-    dates.push(`${6}/${12+i}`)
+    const dt = new Date(2026, 5, 12 + i); dates.push(`${dt.getMonth()+1}/${dt.getDate()}`)
     p += (Math.random() - 0.45) * p * 0.03
     const o = +p.toFixed(2)
     const c = +(p * (1 + (Math.random() - 0.5) * 0.04)).toFixed(2)
