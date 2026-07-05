@@ -494,7 +494,16 @@ DB文件数: 3 个
 - 新增: fetchOverview() — API 字段映射 + 失败保 mock
 - 模板/CSS/GSAP 完全不动
 
-### E-4: Research 前端接真实指标 ⏳ Next
+### E-4: Research 前端接真实指标 ✅ 完成
+- Commit: 360d545
+- 指标面板: 8 项全部 computed 从 apiData.indicators 读取
+- 决策信号: signal/score/reasoning 从 apiData.decision 读取
+- 止损位: stopLoss 从 apiData.key_levels 读取
+- K线/筹码/Agent投票保留 mock（API 暂不返回这些）
+- 全部有 mock 兜底
+
+### E-5: 全链路端到端测试 ⏳ Next
+- Landing → Overview → Scanner → Research 全流程验证
 - 改 Research.vue: K线/筹码/指标/Agent投票/AI报告全换真实数据
 - 改 Overview.vue: 5块mock→fetch(/api/overview)
 - 新建 server/routes/overview.py
