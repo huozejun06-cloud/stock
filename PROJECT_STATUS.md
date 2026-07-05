@@ -488,7 +488,14 @@ DB文件数: 3 个
 - 6 组数据: A股指数/全球指数/市场情绪/热门板块/实时快讯/AI日志
 - 每组独立 mock 兜底
 
-### E-3: Overview 前端换真实数据 ⏳ Next
+### E-3: Overview 前端换真实数据 ✅ 完成
+- Commit: 5924ccb
+- 6 个数据变量: plain → ref() 包裹
+- 新增: fetchOverview() — API 字段映射 + 失败保 mock
+- 模板/CSS/GSAP 完全不动
+
+### E-4: Research 前端接真实指标 ⏳ Next
+- 改 Research.vue: K线/筹码/指标/Agent投票/AI报告全换真实数据
 - 改 Overview.vue: 5块mock→fetch(/api/overview)
 - 新建 server/routes/overview.py
 - 聚A股指数/全球指数/市场情绪/热门板块/实时快讯/AI日志
