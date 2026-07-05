@@ -210,11 +210,11 @@ class DataSourceManager:
         # 优先当前数据源
         if self.current_source == 'eastmoney':
             df = self._get_by_eastmoney(codes)
-            if not df.empty:
+            if hasattr(df,"empty") and not df.empty:
                 return df
         elif self.current_source == 'hexin':
             df = self._get_by_hexin(codes)
-            if not df.empty:
+            if hasattr(df,"empty") and not df.empty:
                 return df
         # 当前数据源失败 → 降级到腾讯批量接口（最可靠）
         print(f"    📡 降级至腾讯批量接口查询 {len(codes)} 只股票...")
@@ -459,7 +459,7 @@ class DataSourceManager:
                 import akshare as ak
                 with V8_LOCK:
                     df = ak.stock_zh_a_spot_em()
-                if not df.empty and len(df) > 2000:
+                if hasattr(df,"empty") and not df.empty and len(df) > 2000:
                     return df
             except Exception as e:
                 print(f"    ⚠️ 东财全市场快照失败: {e}")
@@ -548,7 +548,7 @@ class DataSourceManager:
         if not codes:
             return pd.DataFrame()
         df = self.get_stock_realtime(codes)
-        if not df.empty:
+        if hasattr(df,"empty") and not df.empty:
             df['板块名称'] = board_name
         return df
 
@@ -558,7 +558,7 @@ class DataSourceManager:
         for board_name, codes in self.BOARD_STOCK_MAP.items():
             # 直接走腾讯批量接口，跳过同花顺降级（不在交易时段同花顺单只查询很慢）
             df = self._get_by_tencent(codes)
-            if df.empty:
+            if not hasattr(df,"empty") or df.empty:
                 continue
             avg_pct = df['涨跌幅'].mean()
             top_stock = df.loc[df['涨跌幅'].idxmax()] if not df.empty else {}
