@@ -32,25 +32,25 @@ async def _scan_market_top50():
         print(f'  ⚠️ 全市场扫描失败: {e}')
         return []
 
-    if df is None or df.empty:
+    if not stocks or len(stocks) == 0:
         return []
 
-    rows = df.to_dict('records')
-    stocks = []
-    for row in rows:
-        code = str(row.get('代码', '')).zfill(6)
+    # _fetch() returns list[dict] with fields: code, price, change_pct, volume, name
+    valid = []
+    for s in stocks:
+        code = str(s.get('code', '')).zfill(6)
         if not code or len(code) != 6:
             continue
-        stocks.append({
+        valid.append({
             'code': code,
-            'price': round(float(row.get('最新价', 0)), 2),
-            'change_pct': round(float(row.get('涨跌幅', 0)), 2),
-            'volume': int(float(row.get('成交量', 0))),
-            'name': str(row.get('名称', code)),
+            'price': round(float(s.get('price', 0)), 2),
+            'change_pct': round(float(s.get('change_pct', 0)), 2),
+            'volume': int(float(s.get('volume', 0))),
+            'name': str(s.get('name', code)),
         })
 
-    stocks.sort(key=lambda x: abs(x['change_pct']), reverse=True)
-    return stocks[:50]
+    valid.sort(key=lambda x: abs(x['change_pct']), reverse=True)
+    return valid[:50]
 
 @router.websocket("/ws/scanner")
 async def scanner_websocket(websocket: WebSocket):
