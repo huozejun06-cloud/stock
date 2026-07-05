@@ -1,0 +1,45 @@
+/* ===== Design Tokens — 洞见 INSIGHT ===== */
+/* 全站唯一 CSS 变量来源。组件中使用 var() 引用，不硬编码数值。 */
+
+:root {
+  /* 背景 */
+  --color-bg: #080B13;
+  --color-nav: rgba(18, 22, 32, 0.45);
+
+  /* 强调色 */
+  --color-primary: #ff6b35;
+  --color-highlight: #6c8cff;
+  --color-purple: #8b5cf6;
+  --color-green: #21d07a;
+  --color-red: #ff5b6e;
+
+  /* 文字 */
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-dim: #64748b;
+
+  /* 圆角 */
+  --radius-btn: 16px;
+  --radius-card: 24px;
+  --radius-hero: 32px;
+  --radius-modal: 28px;
+
+  /* 毛玻璃 */
+  --blur-glass: 26px;
+
+  /* 阴影 */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.35);
+  --shadow-xl: 0 40px 100px rgba(0, 0, 0, 0.4);
+
+  /* 间距 */
+  --space-section: 120px;
+  --space-container: 1440px;
+
+  /* 字体 */
+  --font-hero: 'Noto Serif SC', serif;
+  --font-body: 'HarmonyOS Sans SC', 'PingFang SC', sans-serif;
+  --font-number: 'Inter', sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+}
