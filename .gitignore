@@ -1,1 +1,4 @@
 data/全A股K线数据_汇总.csv
+data/kline/
+__pycache__/
+.DS_Store
