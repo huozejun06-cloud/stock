@@ -474,3 +474,13 @@ DB文件数: 3 个
   (协同研判/研究方法/数据来源/Footer全部接入GSAP动画) ⏳ Next ⏳ Next
 - 六层结构 (video + gradient + noise + bloom + CTA + 文案)
 - 5句 GSAP 文案轮播 + NavBar胶囊化 + Lenis初始化
+### E-1: K线缓存数据更新 ✅ 完成
+- Commit: 34a19c5
+- 从 新股票量化/ 项目拷贝 5365 个 CSV 缓存到 data/kline/
+- 数据范围: 2024-06 ~ 2026-07-03, 153MB
+- /api/research/600519 返回真实指标: MA/RSI/MACD/ATR/ADX/决策信号
+- .gitignore 已加 data/kline/ + __pycache__/
+
+### E-2: 新建 /api/overview 聚合端点 ⏳ Next
+- 新建 server/routes/overview.py
+- 聚A股指数/全球指数/市场情绪/热门板块/实时快讯/AI日志
