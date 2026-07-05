@@ -158,6 +158,7 @@ const filters = reactive({
 
 const lastScan = ref('--')
 const scanning = ref(false)
+const apiError = ref(false)
 
 const sectorList = ['半导体', '人工智能', '新能源车', '生物医药', '军工航天', '消费电子', '光伏储能', '金融科技']
 
