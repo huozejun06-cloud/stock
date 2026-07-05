@@ -508,3 +508,29 @@ DB文件数: 3 个
 - 改 Overview.vue: 5块mock→fetch(/api/overview)
 - 新建 server/routes/overview.py
 - 聚A股指数/全球指数/市场情绪/热门板块/实时快讯/AI日志
+
+
+## Phase E 实时数据 P0 Debug 进展 (2026-07-06)
+
+### P0 已修复
+| # | 问题 | 文件 | Commit |
+|---|------|------|--------|
+| 1 | ws.py DataFrame→list 转换缺失 | ws.py | 5316e9e |
+| 2 | ws.py 字段中英文不匹配 | ws.py | d4c0068 |
+| 3 | DataSourceManager .empty 无守卫 | 数据源管理器.py | da4b7f9 |
+| 4 | scanner data_source 标签错误 | scanner.py | 756bf25 |
+| 5 | Backtest optimizations 未声明 | Backtest.vue | 756bf25 |
+| 6 | ws.py 过滤 code 缺少中文 fallback | ws.py | bc0c52b |
+| 7 | DataSourceManager 最新价未加入 result | 数据源管理器.py | 62da6b1 |
+
+### 当前数据链路状态
+- Scanner: Source=live ✅ 代码/名称/涨跌幅/换手率真实
+- Scanner: price=0 🟡 最新价修复中(诊断代码覆盖了修复)
+- 腾讯 API: 4658只股票扫描成功 ✅
+- 板块过滤: 300/301/688/689/8xx 已排除 ✅
+- 东方财富 API: ❌ proxy 残留阻断
+
+### 剩余 P1
+- Scanner 页面滚动条
+- Research K 线 mock
+- 东方财富 proxy 清理
