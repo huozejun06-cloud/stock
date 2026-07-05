@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from server.config import DEEPSEEK_API_KEY
 from server.routes.ws import router as ws_router
 from server.routes.scanner import router as scanner_router
+from server.routes.overview import router as overview_router
 from server.routes.research import router as research_router
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -41,6 +42,7 @@ app.add_middleware(
 app.include_router(ws_router)
 app.include_router(scanner_router)
 app.include_router(research_router)
+app.include_router(overview_router)
 
 
 @app.get("/health")
