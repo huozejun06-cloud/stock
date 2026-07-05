@@ -23,7 +23,7 @@ async def _scan_market_top50():
         mgr = get_manager()
         stocks = mgr.get_all_market_stocks()
         # Filter BEFORE sorting — 排除 创业板/科创板/北交所
-        stocks = [s for s in stocks if not str(s.get('code','')).startswith(('300','301','688','689','8'))]
+        stocks = [s for s in stocks if isinstance(s, dict) and not str(s.get('code','')).startswith(('300','301','688','689','8'))]
         return stocks
 
     try:

@@ -73,16 +73,19 @@ def _cache_stocks(limit=50):
 
 async def _scanner_data():
     from server.routes.ws import _scan_market_top50
+    is_cache = False
     print("[Scanner] 调用 DataSourceManager.get_all_market_stocks()...")
     try:
         stocks = await _scan_market_top50()
         print(f"[Scanner] DataSourceManager 返回 {len(stocks)} 只股票")
+        is_cache = False
     except Exception as e:
         print(f"[Scanner] ❌ DataSourceManager 异常: {e}")
         stocks = []
     if not stocks:
         print("[Scanner] ⚠️ 无数据，降级到 CSV 缓存")
         stocks = _cache_stocks(50)
+        is_cache = True
     print(f"[Scanner] 最终返回 {len(stocks)} 只")
     return {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "total": len(stocks), "stocks": stocks, "data_source": "live" if len(stocks) > 0 and stocks[0].get("price", 0) > 0 else "mock"}
 
