@@ -180,37 +180,60 @@ const pct = computed(() => {
   return +((h % 8 - 2).toFixed(2))
 })
 
-const indicators = [
-  { label: 'MA5', value: '1,188.50 ↑', color: 'var(--color-green)' },
-  { label: 'MA10', value: '1,172.30 ↑', color: 'var(--color-green)' },
-  { label: 'MA20', value: '1,148.00 ↑', color: 'var(--color-green)' },
-  { label: 'MACD', value: 'DIF: +8.42', color: 'var(--color-highlight)' },
-  { label: 'RSI(14)', value: '62.5', color: 'var(--text-primary)' },
-  { label: 'BOLL', value: '上轨: 1,245', color: 'var(--text-secondary)' },
-  { label: 'ATR(14)', value: '18.62 (1.56%)', color: 'var(--text-dim)' },
-  { label: '量比', value: '1.32', color: 'var(--color-purple)' },
-]
+// API-derived indicators (mock fallback when API unavailable)
+const indicators = computed(() => {
+  const ind = apiData.value?.indicators
+  const bp = basePrice.value
+  const up = (v) => parseFloat(v) > bp * 0.98 ? ' ↑' : ' ↓'
+  return [
+    { label: 'MA5', value: ind?.ma5 ? ind.ma5.toFixed(2) + up(ind.ma5) : (bp * 0.993).toFixed(2) + ' ↑', color: 'var(--color-green)' },
+    { label: 'MA10', value: ind?.ma10 ? ind.ma10.toFixed(2) + up(ind.ma10) : (bp * 0.978).toFixed(2) + ' ↑', color: 'var(--color-green)' },
+    { label: 'MA20', value: ind?.ma20 ? ind.ma20.toFixed(2) + up(ind.ma20) : (bp * 0.955).toFixed(2) + ' ↑', color: 'var(--color-green)' },
+    { label: 'MACD', value: ind?.macd ? 'DIF: ' + ind.macd.toFixed(2) : 'DIF: ' + (bp * 0.007).toFixed(2), color: 'var(--color-highlight)' },
+    { label: 'RSI(14)', value: ind?.rsi14 ? ind.rsi14.toFixed(1) : '62.5', color: 'var(--text-primary)' },
+    { label: 'BOLL', value: ind?.ma20 ? '上轨: ' + (ind.ma20 * 1.06).toFixed(0) : '上轨: ' + (bp * 1.06).toFixed(0), color: 'var(--text-secondary)' },
+    { label: 'ATR(14)', value: ind?.atr14 ? ind.atr14.toFixed(2) + ' (' + (ind.atr14 / basePrice.value * 100).toFixed(2) + '%)' : (bp * 0.0156).toFixed(2) + ' (1.56%)', color: 'var(--text-dim)' },
+    { label: '量比', value: ind?.volume_ratio ? ind.volume_ratio.toFixed(2) : '1.32', color: 'var(--color-purple)' },
+  ]
+})
 
-const adx = 38
-const adxLevel = '偏强'
-const fundFlow = '净流入 3.2 亿'
-const bigOrder = '+0.42%'
-const volRatio = '1.32'
-const volLevel = '温和放量'
-const profitRatio = '72.3'
-const concentration = '34.5%'
-const chipLevel = '筹码趋于集中'
-const atr = '1.56'
-const stopLoss = '1,168.00'
-const profitRatio2 = '2.8 : 1'
+const adx = computed(() => apiData.value?.indicators?.adx || 38)
+const adxLevel = computed(() => adx.value >= 40 ? '强趋势' : adx.value >= 25 ? '偏强' : '震荡')
+const fundFlow = ref('净流入 3.2 亿')
+const bigOrder = ref('+0.42%')
+const volRatio = computed(() => apiData.value?.indicators?.volume_ratio?.toFixed(2) || '1.32')
+const volLevel = computed(() => parseFloat(volRatio.value) >= 2 ? '明显放量' : parseFloat(volRatio.value) >= 1.2 ? '温和放量' : '缩量')
+const profitRatio = ref('72.3')
+const concentration = ref('34.5%')
+const chipLevel = ref('筹码趋于集中')
+const atr = computed(() => apiData.value?.indicators?.atr14?.toFixed(2) || '1.56')
+const stopLoss = computed(() => {
+  if (apiData.value?.key_levels?.stop_loss) return apiData.value.key_levels.stop_loss.toFixed(2)
+  return '1,168.00'
+})
+const profitRatio2 = ref('2.8 : 1')
 
-const totalScore = 88
-const buyCount = 7
-const watchCount = 2
-const sellCount = 1
-const signalText = computed(() => totalScore >= 85 ? 'BUY — 建议关注' : totalScore >= 70 ? 'WATCH — 持续观察' : 'SELL — 建议回避')
-const signalColor = computed(() => totalScore >= 85 ? 'var(--color-green)' : totalScore >= 70 ? '#eab308' : 'var(--color-red)')
-const consensusDetail = computed(() => buyCount >= 7 ? '多数模块看好，建议重点关注并自行判断入场时机。' : buyCount >= 5 ? '存在分歧，建议观望等待更明确的信号。' : '多数模块看空，建议回避。')
+const totalScore = computed(() => apiData.value?.decision?.total_score || 88)
+const buyCount = ref(7)
+const watchCount = ref(2)
+const sellCount = ref(1)
+const signalText = computed(() => {
+  const sig = apiData.value?.decision?.signal
+  if (sig === 'B') return 'BUY — 建议关注'
+  if (sig === 'H') return 'WATCH — 持续观察'
+  if (sig === 'D') return 'SELL — 建议回避'
+  return totalScore.value >= 85 ? 'BUY — 建议关注' : totalScore.value >= 70 ? 'WATCH — 持续观察' : 'SELL — 建议回避'
+})
+const signalColor = computed(() => {
+  const txt = signalText.value
+  if (txt.startsWith('BUY')) return 'var(--color-green)'
+  if (txt.startsWith('WATCH')) return '#eab308'
+  return 'var(--color-red)'
+})
+const consensusDetail = computed(() => {
+  if (apiData.value?.decision?.reasoning) return apiData.value.decision.reasoning
+  return buyCount.value >= 7 ? '多数模块看好，建议重点关注。' : buyCount.value >= 5 ? '存在分歧，建议观望。' : '多数模块看空，建议回避。'
+})
 
 // Add refs for new sections
 const patternRef = ref(null)
