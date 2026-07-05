@@ -196,7 +196,7 @@ class DataSourceManager:
                         except Exception as e:
                             print(f"  ⚠️ 数据源管理器.py: {e}")
                             换手率 = 0
-                    res = {'代码': code, '名称': name, '涨跌幅': pct, '换手率': 换手率 or 0}
+                    res = {'代码': code, '名称': name, '涨跌幅': pct, '换手率': 换手率 or 0, '最新价': 最新价}
                     if len(results) < 1: print(f'[DIAG-L2] result dict keys={list(res.keys())}')
                     results.append(res)
             except Exception as e:
