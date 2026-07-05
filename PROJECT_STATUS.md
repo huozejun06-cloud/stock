@@ -481,6 +481,14 @@ DB文件数: 3 个
 - /api/research/600519 返回真实指标: MA/RSI/MACD/ATR/ADX/决策信号
 - .gitignore 已加 data/kline/ + __pycache__/
 
-### E-2: 新建 /api/overview 聚合端点 ⏳ Next
+### E-2: 新建 /api/overview 聚合端点 ✅ 完成
+- Commit: 0db2a00
+- 新建: server/routes/overview.py (164行)
+- 修改: server/app.py (注册 overview_router)
+- 6 组数据: A股指数/全球指数/市场情绪/热门板块/实时快讯/AI日志
+- 每组独立 mock 兜底
+
+### E-3: Overview 前端换真实数据 ⏳ Next
+- 改 Overview.vue: 5块mock→fetch(/api/overview)
 - 新建 server/routes/overview.py
 - 聚A股指数/全球指数/市场情绪/热门板块/实时快讯/AI日志
