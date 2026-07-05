@@ -87,7 +87,7 @@ async def _scanner_data():
         stocks = _cache_stocks(50)
         is_cache = True
     print(f"[Scanner] 最终返回 {len(stocks)} 只")
-    return {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "total": len(stocks), "stocks": stocks, "data_source": "live" if len(stocks) > 0 and stocks[0].get("price", 0) > 0 else "mock"}
+    return {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "total": len(stocks), "stocks": stocks, "data_source": "live" if not is_cache else "cache"}
 
 @router.get("/api/scanner")
 async def get_scanner():
