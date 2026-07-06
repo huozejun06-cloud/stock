@@ -117,6 +117,26 @@
 | CODING_RULES.md | 68 | 编码规范 |
 | FRONTEND_SPEC.md | 376 | 前端完整规范 |
 
+
+
+## 当前已知 Bug 列表 (2026-07-06)
+
+| # | 优先级 | 问题 | 位置 | 状态 |
+|---|--------|------|------|------|
+| 1 | 🔴 P0 | DataSourceManager 'str' object has no attribute 'get' | ws.py | ✅ 已修复 `isinstance(dict)` |
+| 1a | 🔴 P0 | data_source 标签误导 | scanner.py | ✅ 已修复 `is_cache` 标志 |
+| 1b | 🔴 P0 | git proxy 残留 | git config | ✅ 已清除 |
+| 2 | 🔴 P0 | 腾讯 API parts[3] 价格不准 (600048=156.41 实际 4.68) | 数据源管理器.py | ❌ 待修 |
+| 3 | 🟡 P1 | Scanner 滚动条 | Scanner.vue | ✅ 已修复 `data-lenis-prevent` |
+| 4 | 🟡 P1 | 股票自动显示 (未点按钮就有) | Scanner.vue | ✅ 已修复 `stocks=ref([])` |
+| 5 | 🟡 P1 | 688/300 未过滤 | ws.py | ✅ 已修复双名查找 |
+| 6 | 🟡 P1 | Research K 线 mock | Research.vue | ❌ |
+| 7 | 🟡 P1 | Overview 情绪/快讯/板块 mock | overview.py | ❌ |
+| 8 | 🟢 P2 | Backtest optimizations 未声明 | Backtest.vue | ✅ 已修复 |
+| 9 | 🟢 P2 | NavBar Research 硬编码 600519 | NavBar.vue | ❌ |
+| 10 | ⚪ P3 | 视频文件未提供 | Landing 各页 | ❌ |
+| 11 | ⚪ P3 | Backtest 全 mock | Backtest.vue | ❌ |
+
 ## 启动命令
 
 ```bash
