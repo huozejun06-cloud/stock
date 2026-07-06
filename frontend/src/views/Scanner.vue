@@ -53,7 +53,7 @@
           <span class="text-xs" style="color: var(--text-dim)">数据源: 东方财富</span>
         </div>
 
-        <div class="flex-1 overflow-y-auto space-y-1 pr-1" style="min-height: 0">
+        <div class="flex-1 overflow-y-auto space-y-1 pr-1" style="min-height: 0" data-lenis-prevent>
           <div
             v-for="s in filteredStocks"
             :key="s.code"
