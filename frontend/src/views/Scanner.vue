@@ -192,6 +192,7 @@ const _fallback = Array.from({ length: 50 }, (_, i) => {
             '技术面偏弱，均线空头排列，筹码分散，建议暂时回避。',
   }
 });
+const fallbackStocks = _fallback
 
 async function fetchStocks() {
   try {
@@ -216,7 +217,7 @@ async function fetchStocks() {
         }
       })
     }
-  } catch (e) { /* use mock data */ }
+  } catch (e) { console.warn('API unavailable'); stocks.value = fallbackStocks }
 }
 
 const filteredStocks = computed(() => {
@@ -229,12 +230,11 @@ const filteredStocks = computed(() => {
     .sort((a, b) => b.score - a.score)
 })
 
-function runScan() {
+async function runScan() {
   scanning.value = true
-  setTimeout(() => {
-    lastScan.value = new Date().toLocaleTimeString()
-    scanning.value = false
-  }, 1000)
+  await fetchStocks()
+  lastScan.value = new Date().toLocaleTimeString()
+  scanning.value = false
 }
 
 function goResearch() {
