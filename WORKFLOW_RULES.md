@@ -274,3 +274,13 @@ FRONTEND_SPEC.md 第九条「AI 编码神圣执行协议」与本文件具有同
 每个 Task 完成后必须同时提交：
 1. PROJECT_STATUS.md（更新进度 + Commit Hash）
 2. WORKFLOW_RULES.md（规则迭代沉淀）
+
+
+## 十七、Bug 修复铁律 (2026-07-06 追加)
+
+1. 一次只改一个 Bug，禁止顺手修
+2. 先定位根因（终端/浏览器/log 证据），禁止猜测式修复
+3. 一次只改一个文件、一个函数、一行原因
+4. 改完立刻验证：PASS → commit，FAIL → 回退
+5. 禁止在失败代码基础上继续修——必须回退重来
+6. 每次修复前创建 Checkpoint
