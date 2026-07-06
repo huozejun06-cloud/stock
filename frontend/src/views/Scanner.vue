@@ -191,7 +191,7 @@ const _fallback = Array.from({ length: 50 }, (_, i) => {
             score >= 70 ? '技术面偏多，但资金流向中性，建议观察后续量能变化再做决策。' :
             '技术面偏弱，均线空头排列，筹码分散，建议暂时回避。',
   }
-}))
+});
 
 async function fetchStocks() {
   try {
